@@ -264,6 +264,23 @@ const Page = () => {
     }
   };
 
+  // ✅ delete task (only for pending tasks)
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase.from("todos").delete().eq("id", id);
+
+      if (error) {
+        toast.error("Error deleting task: " + error.message);
+        return;
+      }
+
+      toast.success("Task deleted successfully!");
+      if (user) fetchTodos(user.id);
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
+  };
+
   // ✅ edit todo
   const handleEdit = (t: any) => {
     setEditingId(t.id);
@@ -644,6 +661,14 @@ const Page = () => {
                                   onClick={() => handleEdit(t)}
                                 >
                                   <Pencil className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDelete(t.id)}
+                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
                                 </Button>
                                 <input
                                   type="checkbox"
