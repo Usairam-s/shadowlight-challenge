@@ -137,7 +137,7 @@ const Page = () => {
     try {
       // call the n8n webhook url with title
       const response = await fetch(
-        "http://localhost:5678/webhook-test/7f9ab888-0bc4-4258-b05a-1ffdf1d2e415",
+        "https://santa-app.app.n8n.cloud/webhook-test/7f9ab888-0bc4-4258-b05a-1ffdf1d2e415",
         {
           method: "POST",
           headers: {
