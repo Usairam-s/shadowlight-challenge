@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -394,6 +394,13 @@ const Page = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Redirect to home if not authenticated (client-side)
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/");
+    }
+  }, [loading, user, router]);
+
   // Handle logout
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -423,9 +430,9 @@ const Page = () => {
     );
   }
 
-  // Not logged in
+  // Not logged in - show nothing while redirecting
   if (!user) {
-    redirect("/");
+    return null;
   }
 
   // Filtered todos
@@ -679,9 +686,20 @@ const Page = () => {
                             )}
 
                             {t.completed && (
-                              <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
-                                Completed
-                              </span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-green-600 bg-green-50 px-2 py-1 rounded">
+                                  Completed
+                                </span>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => handleDelete(t.id)}
+                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4 mr-1" />
+                                  Remove
+                                </Button>
+                              </div>
                             )}
                           </div>
                         </div>
